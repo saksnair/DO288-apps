@@ -53,8 +53,11 @@ pipeline {
                 script {
 			openshift.withCluter () {
 				openshift.withProject ("${DEV_PROJECT}") {
+echo "Get Latest Version"
 				  def latestDeployVersion = openshift.selector ("dc" , "${APP_NAME}").object().status.latestVersion
+echo "Latest Version: ${latestDeployVersion}"
 				  def rc = openshift.selector ("rc", "${APP_NAME}-{latestDeployVersion}")
+echo "Checking AppExists"
 				  def appExists = false
                                   rc.untilEach (1) {
 				   def rcMap = it.object()
