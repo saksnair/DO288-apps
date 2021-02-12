@@ -72,7 +72,7 @@ return true
 				  }
                                   if (appExists) {
 				    echo "#### Rebuilding the ${APP_NAME} in Dev Env ###"
-				    openshift.startBuild ("bc/${APP_NAME}")				 
+				    //openshift.startBuild ("bc/${APP_NAME}")				 
 				  } else {
 				     echo "#### Creating a new Aapp ${APP_NAME} in Dev Env ###"
                                      //openshift.newapp ("--as-deployment-config --name ${APP_NAME} nodejs:12~${APP_GIT_URL} --build-env npm_config_registry=${NEXUS_SERVER} --context-dir ${APP_NAME}")
@@ -82,14 +82,14 @@ return true
 			}
 		}
                 sh '''
-                        #oc project ${DEV_PROJECT}
-                        #oc delete all -l app=${APP_NAME}
-                        #sleep 5
+                        oc project ${DEV_PROJECT}
+                        oc delete all -l app=${APP_NAME}
+                        sleep 5
                    '''
 
                 echo '### Creating a new app in DEV env ###'
                 sh '''
-                        #oc project ${DEV_PROJECT}
+                        oc project ${DEV_PROJECT}
                         
                         oc new-app --as-deployment-config --name ${APP_NAME} nodejs:12~${APP_GIT_URL} --build-env npm_config_registry=${NEXUSE_SERVER} --context-dir ${APP_NAME}
                         
