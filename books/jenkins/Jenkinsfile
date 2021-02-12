@@ -69,7 +69,7 @@ return true
 				  }
                                   if (appExists) {
 				    echo "#### Rebuilding the ${APP_NAME} in Dev Env ###"
-				    openshift.startBuild ("bc", "${APP_NAME}")				 
+				    openshift.startBuild ("bc/${APP_NAME}")				 
 				  } else {
 				     echo "#### Creating a new Aapp ${APP_NAME} in Dev Env ###"
                                      openshift.newapp ("--as-deployment-config", "--name ${APP_NAME}", "nodejs:12~${APP_GIT_URL}", 
