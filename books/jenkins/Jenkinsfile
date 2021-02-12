@@ -50,18 +50,38 @@ pipeline {
         stage('Launch new app in DEV env') {
             steps {
                 echo '### Cleaning existing resources in DEV env ###'
+                script {
+			openshift.withCluter () {
+				openshift.withProject ("${DEV_PROJECT}") {
+				  def latestDeployVersion = openshift.selector ("dc" , "${APP_NAME}").object().status.latestVersion
+				  def rc = openshift.selector ("rc", "${APP_NAME}-{latestDeployVersion}")
+				  def appExists = false;
+                                  rc.untilEach (1) {
+				   def rcMap = it.object()
+				   appExists = rcpMap.replicas.equals(rcMap.status.readyReplicas)
+				  }
+                                  if (appExists) {
+				    echo "#### Rebuilding the ${APP_NAME} in Dev Env ###"
+				    openshift.startBuild ("bc", "${APP_NAME}")				 
+				  } else {
+				     echo "#### Creating a new Aapp ${APP_NAME} in Dev Env ###"
+                                     openshift.newapp ("--as-deployment-config" "--name ${APP_NAME}", "nodejs:12~${APP_GIT_URL}", 
+				        "--build-env npm_config_registry=${NEXUSE_SERVER}", "--context-dir ${APP_NAME}")
+				  }
+				}
+			}
+		}
                 sh '''
-                        oc project ${DEV_PROJECT}
-                        oc delete all -l app=${APP_NAME}
-                        sleep 5
+                        #oc project ${DEV_PROJECT}
+                        #oc delete all -l app=${APP_NAME}
+                        #sleep 5
                    '''
 
                 echo '### Creating a new app in DEV env ###'
                 sh '''
-                        oc project ${DEV_PROJECT}
-                        oc new-app --as-deployment-config --name ${APP_NAME} nodejs:12~${APP_GIT_URL} \
-                        --build-env npm_config_registry=${NEXUSE_SERVER} \
-                        --context-dir ${APP_NAME}
+                        #oc project ${DEV_PROJECT}
+                        
+                        #oc new-app --as-deployment-config --name ${APP_NAME} nodejs:12~${APP_GIT_URL} --build-env npm_config_registry=${NEXUSE_SERVER} --context-dir ${APP_NAME}
                         
                         oc status
                         oc get all 
@@ -108,7 +128,7 @@ pipeline {
                     input message: "Promote to Staging?"
                 }
                 script {
-                   openshift.wtihCluster() {
+                   openshift.withCluster() {
                       openshift.tag ("${DEV_PROJECT}/${APP_NAME}:latest", "${STAGE_PROJECT}/${APP_NAME}:stage")
                    }
                 }
