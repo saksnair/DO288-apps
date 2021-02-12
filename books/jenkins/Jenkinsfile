@@ -65,6 +65,7 @@ echo "Checking AppExists"
 			           echo "RC Map Ready Replicas: ${rcMap.status.readyReplicas}"
 				   appExists = rcMap.status.replicas.equals(rcMap.status.readyReplicas)
 echo "AppExists: ${appExists}"
+return true
 				  }
                                   if (appExists) {
 				    echo "#### Rebuilding the ${APP_NAME} in Dev Env ###"
