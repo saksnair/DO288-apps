@@ -59,7 +59,7 @@ pipeline {
                                   rc.untilEach (1) {
 				   def rcMap = it.object()
 				   echo "RC Map replicas: ${rcMap.status.replicas}"
-			           echo "RC Map Ready Replicas: $${rcMap.status.readyReplicas}"
+			           echo "RC Map Ready Replicas: ${rcMap.status.readyReplicas}"
 				   appExists = rcpMap.status.replicas.equals(rcMap.status.readyReplicas)
 echo "AppExists: ${appExists}"
 				  }
