@@ -75,7 +75,7 @@ return true
 				    openshift.startBuild ("bc/${APP_NAME}")				 
 				  } else {
 				     echo "#### Creating a new Aapp ${APP_NAME} in Dev Env ###"
-                                     openshift.newapp ("--as-deployment-config --name ${APP_NAME}", "nodejs:12~${APP_GIT_URL}","--build-env npm_config_registry=${NEXUS_SERVER}", "--context-dir ${APP_NAME}")
+                                     openshift.newapp ("--as-deployment-config --name ${APP_NAME} nodejs:12~${APP_GIT_URL} --build-env npm_config_registry=${NEXUS_SERVER} --context-dir ${APP_NAME}")
                                      openshift.expose("svc/${APP_NAME}")
 				  }
 				}
