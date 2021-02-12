@@ -38,7 +38,7 @@ pipeline {
                 echo '### Running unit tests ###'
                 sh '''
                         cd ${APP_NAME}
-                        mvn -s settings.xml -B clean test
+                        #mvn -s settings.xml -B clean test
                    '''
             }
         }
